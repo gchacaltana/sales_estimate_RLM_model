@@ -45,3 +45,30 @@ hist(sales$tejados, probability = TRUE,col=c("darkolivegreen1"),
      main="Distribución de la variable tejados",xlab="m2 en miles")
 lines(density(sales$tejados),col=2,lwd=2)
 
+# Analizamos si existe relación de las ventas de m2 de los tejados con sus posibles predictores
+# mediante diagramas de dispersión
+
+par(mfrow=c(2,2))
+
+plot(sales$gastos,sales$tejados,
+     main="Gráfico de Diagrama de Dispersión: Tejados vendidos vs Gastos en promociones",
+     ylab="M2 tejados vendidos",
+     xlab="Gastos en promociones (en miles $)")
+
+plot(sales$clientes,sales$tejados,
+     main="Gráfico de Diagrama de Dispersión: Tejados vendidos vs número de clientes registrados",
+     ylab="M2 tejados vendidos",
+     xlab="Número de clientes por filial (en miles)")
+
+plot(sales$marcas,sales$tejados,
+     main="Gráfico de Diagrama de Dispersión: Tejados vendidos vs número de marcas competidoras",
+     ylab="M2 tejados vendidos",
+     xlab="Número de marcas competidoras")
+
+plot(sales$potencial,sales$tejados,
+     main="Gráfico de Diagrama de Dispersión: Tejidos vendidos vs Potencial de la filial",
+     ylab="M2 tejados vendidos",
+     xlab="Potencial de filial")
+
+par(mfrow=c(1,1))
+
