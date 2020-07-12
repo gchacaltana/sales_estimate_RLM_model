@@ -72,3 +72,21 @@ plot(sales$potencial,sales$tejados,
 
 par(mfrow=c(1,1))
 
+#-------------------------------------------------------------------------
+# Construcción del modelo
+#-------------------------------------------------------------------------
+
+model_1 <- tejados~gastos+clientes+marcas+potencial
+sales.lm0 <- lm(formula = model_1, data=sales)
+summary(sales.lm0)
+
+# Residuals:
+#   Min       1Q   Median       3Q      Max 
+# -19.0906  -5.9796   0.8968   6.5667  14.7985 
+
+# Estimación de los coeficientes
+coef(sales.lm0)
+
+# (Intercept)      gastos    clientes      marcas   potencial 
+# 178.3203403   1.8070643   3.3178334 -21.1849842   0.3245124
+
