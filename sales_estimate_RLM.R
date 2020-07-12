@@ -31,3 +31,17 @@ summary(sales)
 # 3rd Qu.:217.5   3rd Qu.:6.650   3rd Qu.:61.50   3rd Qu.:11.000   3rd Qu.:13.750  
 # Max.   :339.4   Max.   :9.000   Max.   :75.00   Max.   :13.000   Max.   :19.000 
 
+#-------------------------------------------------------------------------
+# Análisis descriptivo del dataset
+#-------------------------------------------------------------------------
+
+# Analizando la distribución (por frecuencia) de las ventas de m2 de la variable tejados.
+hist(sales$tejados, main="Distribución de las ventas de m2 de tejado",
+     xlab="m2 en miles", ylab="Frecuencia", col=c("bisque"))
+
+# Distribución - de las ventas de la variable tejados
+
+hist(sales$tejados, probability = TRUE,col=c("darkolivegreen1"), 
+     main="Distribución de la variable tejados",xlab="m2 en miles")
+lines(density(sales$tejados),col=2,lwd=2)
+
