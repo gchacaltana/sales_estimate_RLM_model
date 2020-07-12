@@ -90,3 +90,100 @@ coef(sales.lm0)
 # (Intercept)      gastos    clientes      marcas   potencial 
 # 178.3203403   1.8070643   3.3178334 -21.1849842   0.3245124
 
+#-------------------------------------------------------------------------
+# Evaluación del modelo: Prueba de significancia de la regresión
+#-------------------------------------------------------------------------
+
+library(sigr)
+wrapFTest(sales.lm0)
+
+#"F Test summary: (R2=0.9892, F(4,21)=479.1, p<1e-05)."
+
+#-------------------------------------------------------------------------
+# Selección de variables
+#-------------------------------------------------------------------------
+
+#Selección Stepwise
+
+library(MASS)
+sales.lm0<-lm(tejados~gastos+clientes+marcas+potencial, data=sales)
+lm.s2<-stepAIC(sales.lm0, trace = TRUE)
+
+fmla2 <- tejados~gastos+clientes+marcas
+sales.rln <- lm(formula = fmla2,data=sales)
+
+summary(sales.rln)
+sum(sales.rln$residuals^2)/(26-4)
+
+#-------------------------------------------------------------------------
+# Diagnóstico del modelo
+#-------------------------------------------------------------------------
+
+# Gráfico Q-Q
+qqnorm(rstudent(sales.rln),ylab="Cuantiles de los Residuos Estudentizados")
+qqline(rstudent(sales.rln))
+
+# Envelopes
+source("http://www.poleto.com/funcoes/envel.norm.txt")
+envel.norm(sales.rln)  
+
+# Test de normalidad
+shapiro.test(rstudent(sales.rln))
+# W = 0.9792, p-value = 0.8566
+
+envel.norm(sales.rln)
+# (2) Homocedasticidad              
+#---------------------
+
+
+# Gráfico de residuos estudentizados 
+
+rs2<-rstudent(sales.rln) # Residuos studentizados
+pred2 <- predict(sales.rln)  # Valores ajustados
+
+# límites para detectar outliers: quantiles de la distribución t-distribution (corrección de Bonferroni)
+
+n <- dim(sales)[1];p<-length(sales.rln$coefficients);alfa <- 0.01
+t2 <- qt(alfa/(n*2),df=n-p-1)
+par(mfrow=c(2,2))
+plot(pred2,rs2,ylab="residuos estudentizados",xlab="m2 tejados vendidos",
+     main="residuos estudentizados versus m2 tejados vendidos",ylim=c(-5,5)) 
+abline(-t,0)
+abline(t,0)
+abline(0,0)
+
+plot(sales$gastos,rs2,ylab="residuos estudentizados",xlab="Gastos de promoción (en miles)",
+     main="residuos estudentizados versus gastos de promoción",ylim=c(-5,5)) 
+abline(-t,0)
+abline(t,0)
+abline(0,0)
+
+plot(sales$clientes,rs2, ylab="residuos estudentizados",xlab="clientes registrados (en miles)",
+     main="residuos estudentizados versus clientes registrados",ylim=c(-5,5)) 
+abline(-t,0)
+abline(t,0)
+abline(0,0)
+
+plot(sales$marcas,rs2, ylab="residuos estudentizados",xlab="Número de marcas competidoras",
+     main="residuos estudentizados versus marcas en competencia",ylim=c(-5,5)) 
+abline(-t,0)
+abline(t,0)
+abline(0,0)
+par(mfrow=c(1,1))
+
+#Test de Heterocedasticidad (Test de Breusch-Pagan)
+
+#install.packages("rlang")
+
+library(car)
+ncvTest(sales.rln)
+
+# Variance formula: ~ fitted.values 
+# Chisquare = 0.3323654, Df = 1, p = 0.56427
+
+# (3) Multicolinealidad    
+#----------------------
+car::vif(sales.rln)
+
+# gastos clientes   marcas 
+# 1.031060 1.150545 1.117925
